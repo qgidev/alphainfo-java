@@ -52,6 +52,10 @@ public final class Models {
         public final Map<String, Object> provenance;
         public final SemanticResult semantic;
         public final String warning;
+        /** Always populated by server 1.5.12+. The calibration actually applied. */
+        public final String domainApplied;
+        /** Populated only when the caller passed {@code domain="auto"}. */
+        public final DomainInference domainInference;
 
         @JsonCreator
         public AnalysisResult(
@@ -64,7 +68,9 @@ public final class Models {
                 @JsonProperty("metrics") Map<String, Object> metrics,
                 @JsonProperty("provenance") Map<String, Object> provenance,
                 @JsonProperty("semantic") SemanticResult semantic,
-                @JsonProperty("warning") String warning) {
+                @JsonProperty("warning") String warning,
+                @JsonProperty("domain_applied") String domainApplied,
+                @JsonProperty("domain_inference") DomainInference domainInference) {
             this.structuralScore = structuralScore;
             this.changeDetected = changeDetected;
             this.changeScore = changeScore;
@@ -75,6 +81,32 @@ public final class Models {
             this.provenance = provenance;
             this.semantic = semantic;
             this.warning = warning;
+            this.domainApplied = domainApplied;
+            this.domainInference = domainInference;
+        }
+    }
+
+    /**
+     * Inference block returned when the caller passed {@code domain="auto"}.
+     * Null on the {@link AnalysisResult} for any other domain value.
+     */
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static final class DomainInference {
+        public final String inferred;
+        public final double confidence;
+        public final boolean fallbackUsed;
+        public final String reasoning;
+
+        @JsonCreator
+        public DomainInference(
+                @JsonProperty("inferred") String inferred,
+                @JsonProperty("confidence") double confidence,
+                @JsonProperty("fallback_used") boolean fallbackUsed,
+                @JsonProperty("reasoning") String reasoning) {
+            this.inferred = inferred;
+            this.confidence = confidence;
+            this.fallbackUsed = fallbackUsed;
+            this.reasoning = reasoning;
         }
     }
 

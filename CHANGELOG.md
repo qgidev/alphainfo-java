@@ -1,5 +1,22 @@
 # Changelog
 
+## [1.5.12] - 2026-04-20
+
+Added automatic domain inference; `domain` field on `AnalyzeRequest`
+now optional with sensible default.
+
+- New nested `Models.DomainInference` class (inferred, confidence,
+  fallbackUsed, reasoning).
+- `AnalysisResult.domainApplied` — populated by server 1.5.12+.
+- `AnalysisResult.domainInference` — populated only when the caller
+  set `req.domain = "auto"`.
+- New `client.analyzeAuto(AnalyzeRequest)` + `client.analyzeAutoAsync`
+  helpers — sugar for `analyze(...)` with `req.domain = "auto"`.
+- Javadoc on `analyze()` updated to explain "auto", aliases, and the
+  "Did you mean …?" suggestion path.
+
+Backwards-compatible — explicit-domain callers unaffected.
+
 ## [1.5.11] - 2026-04-20
 
 ### Connection cleanup improvements.

@@ -175,12 +175,38 @@ public class AlphaInfoClient implements AutoCloseable {
     // analyze / fingerprint
     // -----------------------------------------------------------------------
 
+    /**
+     * Run a full structural analysis on a single signal.
+     *
+     * <p>The {@code domain} field on the request is optional — defaults to
+     * "generic". Pass {@code "auto"} to have the server infer the calibration
+     * from the signal (then read {@link AnalysisResult#domainApplied} and
+     * {@link AnalysisResult#domainInference}). Or pass a specific name
+     * ({@code "biomedical"}, {@code "finance"}, …); aliases like
+     * {@code "fintech"} and {@code "biomed"} resolve server-side. Real typos
+     * receive HTTP 400 with a "Did you mean …?" suggestion.
+     */
     public AnalysisResult analyze(AnalyzeRequest req) {
         return executeAnalyze("/v1/analyze/stream", toJsonBody(req));
     }
 
     public CompletableFuture<AnalysisResult> analyzeAsync(AnalyzeRequest req) {
         return CompletableFuture.supplyAsync(() -> analyze(req));
+    }
+
+    /**
+     * Syntactic sugar for {@link #analyze(AnalyzeRequest)} with
+     * {@code req.domain = "auto"}. The server picks the best calibration
+     * from cheap signal statistics; inspect {@link AnalysisResult#domainInference}
+     * on the returned value for confidence + reasoning.
+     */
+    public AnalysisResult analyzeAuto(AnalyzeRequest req) {
+        req.domain = "auto";
+        return analyze(req);
+    }
+
+    public CompletableFuture<AnalysisResult> analyzeAutoAsync(AnalyzeRequest req) {
+        return CompletableFuture.supplyAsync(() -> analyzeAuto(req));
     }
 
     public FingerprintResult fingerprint(AnalyzeRequest req) {
