@@ -10,11 +10,17 @@ version = "1.5.10"
 description = "Java client for the alphainfo.io Structural Intelligence API"
 
 java {
-    toolchain {
-        languageVersion.set(JavaLanguageVersion.of(11))
-    }
+    // Target Java 11 bytecode so consumers on 11+ can use the JAR, but
+    // don't require a JDK 11 toolchain for the build — modern toolchains
+    // (17/21) compile perfectly with --release 11.
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
     withSourcesJar()
     withJavadocJar()
+}
+
+tasks.withType<JavaCompile>().configureEach {
+    options.release.set(11)
 }
 
 repositories {
