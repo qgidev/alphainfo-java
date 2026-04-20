@@ -90,10 +90,32 @@ public class AlphaInfoClient implements AutoCloseable {
                 .build();
     }
 
+    /**
+     * Release the dispatcher thread pool and evict all idle keep-alive
+     * connections held by OkHttp. Safe to call more than once — the second
+     * call is a no-op because {@code ExecutorService.shutdown} is
+     * idempotent and evicting an already-empty connection pool is a
+     * cheap check.
+     *
+     * <p>Idiomatic usage (preferred):
+     * <pre>{@code
+     * try (var client = new AlphaInfoClient("ai_...")) {
+     *     client.analyze(...);
+     * }
+     * }</pre>
+     */
     @Override
     public void close() {
-        httpClient.dispatcher().executorService().shutdown();
-        httpClient.connectionPool().evictAll();
+        try {
+            httpClient.dispatcher().executorService().shutdown();
+        } catch (Exception ignored) {
+            // defensive — never throw from close()
+        }
+        try {
+            httpClient.connectionPool().evictAll();
+        } catch (Exception ignored) {
+            // defensive
+        }
     }
 
     /** @return latest {@code X-RateLimit-*} info, or {@code null} if none observed yet. */

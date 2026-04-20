@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.5.11] - 2026-04-20
+
+### Connection cleanup improvements.
+
+- `close()` is now fully idempotent and defensive — wrapped in
+  try/ignore blocks so a double-close (or close on a partially
+  initialized client) can never throw.
+- `AlphaInfoClient` already implements `AutoCloseable`; the idiomatic
+  path (`try (var c = new AlphaInfoClient(...))`) is unchanged and
+  documented in the README.
+- Javadoc added spelling out the close contract.
+
 ## [1.5.10] - 2026-04-20
 
 ### Initial release — parity with Python SDK 1.5.10.

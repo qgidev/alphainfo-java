@@ -169,4 +169,22 @@ class AlphaInfoClientTest {
             assertThrows(ValidationException.class, () -> c.auditReplay(""));
         }
     }
+
+    // ── Bloco 1.2 — close() cleanup ──────────────────────────────────────
+
+    @Test
+    void closeIsIdempotent() {
+        var c = newClient();
+        c.close();
+        c.close(); // must not throw
+    }
+
+    @Test
+    void tryWithResourcesDoesNotLeak() {
+        // The point of this test is simply to exercise AutoCloseable at compile
+        // time and prove that close() runs without throwing in the happy path.
+        try (var c = newClient()) {
+            assertNotNull(c);
+        }
+    }
 }
