@@ -50,7 +50,10 @@ tasks.javadoc {
 
 spotless {
     java {
-        googleJavaFormat("1.22.0")
+        // Keep this in lockstep with the `google-java-format` CLI used locally
+        // to apply fixes (brew install google-java-format). Version skew
+        // will cause CI to reject files that look fine locally.
+        googleJavaFormat("1.25.2")
         target("src/**/*.java")
     }
 }
