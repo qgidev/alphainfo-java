@@ -11,7 +11,12 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        java: ["11", "17", "21"]
+        # JDK used to RUN Gradle. Modern Gradle (8.10+) requires JVM 17+.
+        # The produced bytecode still targets Java 11 via
+        # `options.release.set(11)` in build.gradle.kts, so consumers on
+        # Java 11+ remain supported. We test under 17 and 21 to catch
+        # any JDK-specific issues in the build/test pass.
+        java: ["17", "21"]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
