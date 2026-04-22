@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "io.alphainfo"
-version = "1.5.12"
+version = "1.5.13"
 description = "Java client for the alphainfo.io Structural Intelligence API"
 
 java {
