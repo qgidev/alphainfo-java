@@ -26,5 +26,5 @@ public final class AlphaInfoConstants {
   public static final int MIN_FINGERPRINT_SAMPLES_WITH_BASELINE = 50;
 
   /** SDK version string for the {@code User-Agent} header. */
-  public static final String SDK_VERSION = "1.5.17";
+  public static final String SDK_VERSION = "1.5.18";
 }
